@@ -73,23 +73,16 @@ class Loan:
         CONN.commit()
 
     @classmethod
-    def create(cls, loan_type, loan_amount, bank, customer):
+    def create(cls, loan_type, loan_amount, bank_id, customer_id):
         # Check if bank and customers and instances
-        if isinstance(bank, Bank) and isinstance(customer, Customer):
-            # check if the customer has existed their loan limit
-            if loan_amount < customer.loan_limit:
-                new_loan = cls(loan_type, loan_amount, bank.id, customer.id)
+        
+                new_loan = cls(loan_type, loan_amount, bank_id, customer_id)
                 new_loan.save()
                 # update customers loan limit
-                customer.loan_limit -= loan_amount
-                customer.update()
+                
 
                 return new_loan
-            else:
-                print(f"Loan limit exceeded. Current Loan: KES {customer.loan_total()} \nKES {loan_amount} borrowed while limit is KES {customer.loan_limit}.\nPay to increase Loan Limit")
-                return
-        raise TypeError("bank and customer arguments have to be of class Bank and Customer respectively")
-    
+            
     @classmethod
     def instance_from_db(cls, result):
         # first check if it exists in all dict
